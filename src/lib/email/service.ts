@@ -2,48 +2,50 @@ import nodemailer from "nodemailer";
 
 /* ─── Shared Types ─── */
 interface OrderItem {
-    name: string;
-    price: number;
-    quantity: number;
+  name: string;
+  price: number;
+  quantity: number;
 }
 
 interface ShippingAddress {
-    name: string;
-    email: string;
-    phone: string;
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
+  name: string;
+  email: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
 }
 
 /* ─── Shared transporter factory ─── */
 function createTransporter() {
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-        throw new Error(
-            `Missing env: ${[
-                !process.env.GMAIL_USER && "GMAIL_USER",
-                !process.env.GMAIL_APP_PASSWORD && "GMAIL_APP_PASSWORD",
-            ]
-                .filter(Boolean)
-                .join(", ")}`
-        );
-    }
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    throw new Error(
+      `Missing env: ${[
+        !process.env.GMAIL_USER && "GMAIL_USER",
+        !process.env.GMAIL_APP_PASSWORD && "GMAIL_APP_PASSWORD",
+      ]
+        .filter(Boolean)
+        .join(", ")}`
+    );
+  }
 
-    return nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASSWORD,
-        },
-    });
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
 }
 
 const FROM = '"Sareine" <sareinebeauty@gmail.com>';
 
 /* ─── Shared email wrapper ─── */
 function emailWrapper(headerSubtitle: string, body: string): string {
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -80,18 +82,18 @@ function emailWrapper(headerSubtitle: string, body: string): string {
 
 /* ─── Items table helper ─── */
 function buildItemsTable(items: OrderItem[], amount: number): string {
-    const rows = items
-        .map(
-            (item) => `
+  const rows = items
+    .map(
+      (item) => `
       <tr>
         <td style="padding:12px 16px;border-bottom:1px solid #f0ece4;font-size:14px;color:#2a2723;">${item.name}</td>
         <td style="padding:12px 16px;border-bottom:1px solid #f0ece4;font-size:14px;color:#5e564d;text-align:center;">${item.quantity}</td>
         <td style="padding:12px 16px;border-bottom:1px solid #f0ece4;font-size:14px;color:#2a2723;text-align:right;font-weight:600;">₹${item.price * item.quantity}</td>
       </tr>`
-        )
-        .join("");
+    )
+    .join("");
 
-    return `
+  return `
   <tr><td style="padding:24px;">
     <h3 style="margin:0 0 16px;font-family:'Georgia',serif;font-size:16px;font-weight:500;color:#2a2723;">Order Summary</h3>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #f0ece4;border-radius:8px;overflow:hidden;">
@@ -111,7 +113,7 @@ function buildItemsTable(items: OrderItem[], amount: number): string {
 
 /* ─── Shipping address block helper ─── */
 function buildShippingBlock(addr: ShippingAddress): string {
-    return `
+  return `
   <tr><td style="padding:0 24px 24px;">
     <h3 style="margin:0 0 12px;font-family:'Georgia',serif;font-size:16px;font-weight:500;color:#2a2723;">Shipping To</h3>
     <div style="background:#faf7f2;border:1px solid #f0ece4;border-radius:8px;padding:16px;">
@@ -127,26 +129,26 @@ function buildShippingBlock(addr: ShippingAddress): string {
 
 /* ─── Divider helper ─── */
 function divider(): string {
-    return `<tr><td style="padding:0 24px;"><hr style="border:none;height:1px;background:linear-gradient(90deg,transparent,#C9A45C,transparent);margin:0;"></td></tr>`;
+  return `<tr><td style="padding:0 24px;"><hr style="border:none;height:1px;background:linear-gradient(90deg,transparent,#C9A45C,transparent);margin:0;"></td></tr>`;
 }
 
 /* ═══════════════════════════════════════════════
  *  1. ORDER CONFIRMATION EMAIL
  * ═══════════════════════════════════════════════ */
 interface OrderEmailData {
-    customerName: string;
-    customerEmail: string;
-    razorpayPaymentId: string;
-    items: OrderItem[];
-    amount: number;
-    shippingAddress: ShippingAddress;
+  customerName: string;
+  customerEmail: string;
+  razorpayPaymentId: string;
+  items: OrderItem[];
+  amount: number;
+  shippingAddress: ShippingAddress;
 }
 
 export async function sendOrderConfirmationEmail(
-    data: OrderEmailData
+  data: OrderEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const body = `
+  try {
+    const body = `
       <tr><td style="padding:32px 24px 16px;">
         <h2 style="margin:0 0 8px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">Thank you, ${data.customerName}!</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.6;">Your payment has been confirmed. We are preparing your order with care.</p>
@@ -158,39 +160,39 @@ export async function sendOrderConfirmationEmail(
         <p style="margin:0;font-size:12px;color:#5e564d;">Payment ID: <strong style="color:#2a2723;">${data.razorpayPaymentId}</strong></p>
       </td></tr>`;
 
-        const html = emailWrapper("Order Confirmation", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.customerEmail,
-            subject: "Order Confirmed — Sareine",
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Order confirmation failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("Order Confirmation", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.customerEmail,
+      subject: "Order Confirmed — Sareine",
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Order confirmation failed:", message);
+    return { success: false, error: message };
+  }
 }
 
 /* ═══════════════════════════════════════════════
  *  2. PREORDER CONFIRMATION EMAIL
  * ═══════════════════════════════════════════════ */
 interface PreorderEmailData {
-    customerName: string;
-    customerEmail: string;
-    preorderId: string;
-    items: OrderItem[];
-    amount: number;
-    shippingAddress: ShippingAddress;
+  customerName: string;
+  customerEmail: string;
+  preorderId: string;
+  items: OrderItem[];
+  amount: number;
+  shippingAddress: ShippingAddress;
 }
 
 export async function sendPreorderConfirmationEmail(
-    data: PreorderEmailData
+  data: PreorderEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const body = `
+  try {
+    const body = `
       <tr><td style="padding:32px 24px 16px;">
         <h2 style="margin:0 0 8px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">Thank you, ${data.customerName}!</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.6;">Your pre-order has been received. We'll reach out with a payment link when it's ready to ship.</p>
@@ -213,38 +215,38 @@ export async function sendPreorderConfirmationEmail(
         </div>
       </td></tr>`;
 
-        const html = emailWrapper("Pre-order Confirmed", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.customerEmail,
-            subject: `Pre-order Confirmed — ${data.preorderId} — Sareine`,
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Preorder confirmation failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("Pre-order Confirmed", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.customerEmail,
+      subject: `Pre-order Confirmed — ${data.preorderId} — Sareine`,
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Preorder confirmation failed:", message);
+    return { success: false, error: message };
+  }
 }
 
 /* ═══════════════════════════════════════════════
  *  3. PAYMENT LINK EMAIL
  * ═══════════════════════════════════════════════ */
 interface PaymentLinkEmailData {
-    customerName: string;
-    customerEmail: string;
-    preorderId: string;
-    amount: number;
-    paymentLink: string;
+  customerName: string;
+  customerEmail: string;
+  preorderId: string;
+  amount: number;
+  paymentLink: string;
 }
 
 export async function sendPaymentLinkEmail(
-    data: PaymentLinkEmailData
+  data: PaymentLinkEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const body = `
+  try {
+    const body = `
       <tr><td style="padding:32px 24px 16px;">
         <h2 style="margin:0 0 8px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">Hi ${data.customerName},</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.6;">
@@ -262,39 +264,39 @@ export async function sendPaymentLinkEmail(
         <p style="margin:12px 0 0;font-size:12px;color:#5e564d;">Or copy this link: <a href="${data.paymentLink}" style="color:#C9A45C;">${data.paymentLink}</a></p>
       </td></tr>`;
 
-        const html = emailWrapper("Your Order is Ready", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.customerEmail,
-            subject: `Complete Your Payment — ${data.preorderId} — Sareine`,
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Payment link email failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("Your Order is Ready", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.customerEmail,
+      subject: `Complete Your Payment — ${data.preorderId} — Sareine`,
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Payment link email failed:", message);
+    return { success: false, error: message };
+  }
 }
 
 /* ═══════════════════════════════════════════════
  *  4. DISPATCH CONFIRMATION EMAIL
  * ═══════════════════════════════════════════════ */
 interface DispatchEmailData {
-    customerName: string;
-    customerEmail: string;
-    orderId: string;
-    items: OrderItem[];
-    amount: number;
-    shippingAddress: ShippingAddress;
+  customerName: string;
+  customerEmail: string;
+  orderId: string;
+  items: OrderItem[];
+  amount: number;
+  shippingAddress: ShippingAddress;
 }
 
 export async function sendDispatchConfirmationEmail(
-    data: DispatchEmailData
+  data: DispatchEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const body = `
+  try {
+    const body = `
       <tr><td style="padding:32px 24px 16px;">
         <h2 style="margin:0 0 8px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">Your order has been shipped! 🚚</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.6;">
@@ -312,30 +314,30 @@ export async function sendDispatchConfirmationEmail(
         </div>
       </td></tr>`;
 
-        const html = emailWrapper("Order Shipped", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.customerEmail,
-            subject: `Your Order Has Been Shipped — Sareine`,
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Dispatch confirmation failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("Order Shipped", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.customerEmail,
+      subject: `Your Order Has Been Shipped — Sareine`,
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Dispatch confirmation failed:", message);
+    return { success: false, error: message };
+  }
 }
 
 /* ═══════════════════════════════════════════════
  *  5. DELIVERY CONFIRMATION EMAIL
  * ═══════════════════════════════════════════════ */
 export async function sendDeliveryConfirmationEmail(
-    data: DispatchEmailData
+  data: DispatchEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const body = `
+  try {
+    const body = `
       <tr><td style="padding:32px 24px 16px;">
         <h2 style="margin:0 0 8px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">Your order has been delivered! 🎉</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.6;">
@@ -352,81 +354,81 @@ export async function sendDeliveryConfirmationEmail(
         </div>
       </td></tr>`;
 
-        const html = emailWrapper("Order Delivered", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.customerEmail,
-            subject: `Your Order Has Been Delivered — Sareine`,
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Delivery confirmation failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("Order Delivered", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.customerEmail,
+      subject: `Your Order Has Been Delivered — Sareine`,
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Delivery confirmation failed:", message);
+    return { success: false, error: message };
+  }
 }
 
 /* ═══════════════════════════════════════════════
  *  6. PROMOTIONAL / ANNOUNCEMENT EMAIL
  * ═══════════════════════════════════════════════ */
 interface PromoEmailData {
-    customerName: string;
-    customerEmail: string;
-    subject: string;
-    heading: string;
-    bodyText: string;
-    ctaText?: string;
-    ctaUrl?: string;
+  customerName: string;
+  customerEmail: string;
+  subject: string;
+  heading: string;
+  bodyText: string;
+  ctaText?: string;
+  ctaUrl?: string;
 }
 
 export async function sendPromotionalEmail(
-    data: PromoEmailData
+  data: PromoEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const ctaBlock = data.ctaText && data.ctaUrl
-            ? `<tr><td style="padding:0 24px 32px;text-align:center;">
+  try {
+    const ctaBlock = data.ctaText && data.ctaUrl
+      ? `<tr><td style="padding:0 24px 32px;text-align:center;">
            <a href="${data.ctaUrl}" style="display:inline-block;background:linear-gradient(135deg,#C9A45C 0%,#D4B46A 50%,#BAA05C 100%);color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:14px;font-weight:600;letter-spacing:0.04em;">${data.ctaText}</a>
          </td></tr>`
-            : "";
+      : "";
 
-        const body = `
+    const body = `
       <tr><td style="padding:32px 24px 16px;">
         <h2 style="margin:0 0 12px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">${data.heading}</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.7;white-space:pre-line;">${data.bodyText}</p>
       </td></tr>
       ${ctaBlock}`;
 
-        const html = emailWrapper("From Sareine", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.customerEmail,
-            subject: data.subject,
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Promotional email failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("From Sareine", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.customerEmail,
+      subject: data.subject,
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Promotional email failed:", message);
+    return { success: false, error: message };
+  }
 }
 
 /* ═══════════════════════════════════════════════
  *  7. WELCOME EMAIL
  * ═══════════════════════════════════════════════ */
 interface WelcomeEmailData {
-    customerName: string;
-    customerEmail: string;
+  customerName: string;
+  customerEmail: string;
 }
 
 export async function sendWelcomeEmail(
-    data: WelcomeEmailData
+  data: WelcomeEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const body = `
+  try {
+    const body = `
       <tr><td style="padding:32px 24px 16px;">
         <h2 style="margin:0 0 8px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">Welcome to Sareine, ${data.customerName}!</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.7;">
@@ -448,54 +450,54 @@ export async function sendWelcomeEmail(
         <a href="https://sareine.in" style="display:inline-block;background:linear-gradient(135deg,#C9A45C 0%,#D4B46A 50%,#BAA05C 100%);color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:14px;font-weight:600;letter-spacing:0.04em;">Explore Sareine</a>
       </td></tr>`;
 
-        const html = emailWrapper("Welcome", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.customerEmail,
-            subject: "Welcome to Sareine 💛",
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Welcome email failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("Welcome", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.customerEmail,
+      subject: "Welcome to Sareine 💛",
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Welcome email failed:", message);
+    return { success: false, error: message };
+  }
 }
 
 /* ═══════════════════════════════════════════════
  *  CUSTOM EMAIL (for admin quick actions)
  * ═══════════════════════════════════════════════ */
 interface CustomEmailData {
-    recipientEmail: string;
-    subject: string;
-    heading: string;
-    bodyText: string;
+  recipientEmail: string;
+  subject: string;
+  heading: string;
+  bodyText: string;
 }
 
 export async function sendCustomEmail(
-    data: CustomEmailData
+  data: CustomEmailData
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const body = `
+  try {
+    const body = `
       <tr><td style="padding:32px 24px;">
         <h2 style="margin:0 0 12px;font-family:'Georgia',serif;font-size:22px;font-weight:500;color:#2a2723;">${data.heading}</h2>
         <p style="margin:0;font-size:14px;color:#5e564d;line-height:1.7;white-space:pre-line;">${data.bodyText}</p>
       </td></tr>`;
 
-        const html = emailWrapper("Sareine", body);
-        const transporter = createTransporter();
-        await transporter.sendMail({
-            from: FROM,
-            to: data.recipientEmail,
-            subject: data.subject,
-            html,
-        });
-        return { success: true };
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to send email";
-        console.error("[EMAIL] Custom email failed:", message);
-        return { success: false, error: message };
-    }
+    const html = emailWrapper("Sareine", body);
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: FROM,
+      to: data.recipientEmail,
+      subject: data.subject,
+      html,
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    console.error("[EMAIL] Custom email failed:", message);
+    return { success: false, error: message };
+  }
 }
