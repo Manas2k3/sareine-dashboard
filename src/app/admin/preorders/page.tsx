@@ -73,12 +73,34 @@ export default function PreordersPage() {
     }, [fetchPreorders]);
 
     /* Send payment link */
+    /* Send payment link */
     const sendPaymentLink = async (preorder: Preorder) => {
-        const paymentLink = prompt("Enter payment link URL:");
-        if (!paymentLink) return;
         setActionLoading(preorder.id);
         try {
-            const res = await fetch("/api/admin/emails/send", {
+            // 1. Generate Payment Link
+            const linkRes = await fetch("/api/razorpay/create-payment-link", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    amount: preorder.amount,
+                    customerName: preorder.customerName,
+                    customerEmail: preorder.customerEmail,
+                    phone: preorder.shippingAddress?.phone || preorder.phone,
+                    preorderId: preorder.preorderId,
+                }),
+            });
+            const linkData = await linkRes.json();
+
+            if (!linkRes.ok || !linkData.short_url) {
+                alert("Failed to generate payment link: " + (linkData.error || "Unknown error"));
+                setActionLoading(null);
+                return;
+            }
+
+            const paymentLink = linkData.short_url;
+
+            // 2. Send Email
+            const emailRes = await fetch("/api/admin/emails/send", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -90,7 +112,8 @@ export default function PreordersPage() {
                     paymentLink,
                 }),
             });
-            if (res.ok) {
+
+            if (emailRes.ok) {
                 /* Update status */
                 await fetch("/api/admin/preorders/update-status", {
                     method: "POST",
@@ -101,11 +124,12 @@ export default function PreordersPage() {
                     }),
                 });
                 await fetchPreorders();
-                alert("Payment link sent!");
+                alert("Payment link generated and sent!");
             } else {
-                alert("Failed to send payment link");
+                alert("Failed to send email");
             }
-        } catch {
+        } catch (error) {
+            console.error(error);
             alert("Network error");
         } finally {
             setActionLoading(null);
