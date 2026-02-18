@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
             }
 
             case "payment_link": {
+                console.log("[API] Sending payment link email for:", body.preorderId);
                 const { customerName, customerEmail, preorderId, amount, paymentLink } = body;
                 result = await sendPaymentLinkEmail({
                     customerName,
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
                     amount,
                     paymentLink,
                 });
+                console.log("[API] Payment link email result:", result);
                 break;
             }
 
