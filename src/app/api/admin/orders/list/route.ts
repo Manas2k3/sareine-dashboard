@@ -20,12 +20,13 @@ export async function GET(req: NextRequest) {
             ...doc.data(),
         }));
 
-        /* Client-side search filter (name/email) */
+        /* Client-side search filter (name/email from shippingAddress) */
         if (search) {
             orders = orders.filter((o) => {
                 const data = o as Record<string, unknown>;
-                const name = String(data.customerName || "").toLowerCase();
-                const email = String(data.customerEmail || "").toLowerCase();
+                const shipping = data.shippingAddress as Record<string, unknown> | undefined;
+                const name = String(shipping?.name || data.customerName || "").toLowerCase();
+                const email = String(shipping?.email || data.customerEmail || "").toLowerCase();
                 return name.includes(search) || email.includes(search);
             });
         }

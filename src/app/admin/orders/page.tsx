@@ -195,10 +195,10 @@ export default function OrdersPage() {
                                             <td>
                                                 <div className={styles.customerCell}>
                                                     <span className={styles.customerName}>
-                                                        {order.customerName || "Unknown"}
+                                                        {order.shippingAddress?.name || order.customerName || "Unknown"}
                                                     </span>
                                                     <span className={styles.customerEmail}>
-                                                        {order.customerEmail}
+                                                        {order.shippingAddress?.email || order.customerEmail}
                                                     </span>
                                                 </div>
                                             </td>

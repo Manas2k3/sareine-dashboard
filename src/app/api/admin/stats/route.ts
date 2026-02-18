@@ -77,11 +77,21 @@ export async function GET() {
 
         const recentActivity = allItems.slice(0, 10).map((raw) => {
             const item = raw as Record<string, unknown>;
+            /* Orders: name/email in shippingAddress; Preorders: top-level customerName/customerEmail */
+            const shipping = item.shippingAddress as Record<string, unknown> | undefined;
+            const name =
+                (item.customerName as string) ||
+                (shipping?.name as string) ||
+                "Unknown";
+            const email =
+                (item.customerEmail as string) ||
+                (shipping?.email as string) ||
+                "";
             return {
                 type: raw.type,
                 id: (item.id as string) || "",
-                customerName: (item.customerName as string) || "Unknown",
-                customerEmail: (item.customerEmail as string) || "",
+                customerName: name,
+                customerEmail: email,
                 amount: Number(item.amount) || 0,
                 status: (item.status as string) || "unknown",
                 createdAt: item.createdAt,
