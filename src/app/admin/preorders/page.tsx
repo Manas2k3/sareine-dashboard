@@ -73,11 +73,10 @@ export default function PreordersPage() {
     }, [fetchPreorders]);
 
     /* Send payment link */
-    /* Send payment link */
     const sendPaymentLink = async (preorder: Preorder) => {
         setActionLoading(preorder.id);
         try {
-            // 1. Generate Payment Link
+            // 1. Generate Payment Link via Razorpay
             const linkRes = await fetch("/api/razorpay/create-payment-link", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -99,35 +98,42 @@ export default function PreordersPage() {
 
             const paymentLink = linkData.short_url;
 
-            // 2. Send Email
-            const emailRes = await fetch("/api/admin/emails/send", {
+            // 2. Update status immediately — Razorpay already notifies customer via SMS/email
+            await fetch("/api/admin/preorders/update-status", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    type: "payment_link",
-                    customerName: preorder.customerName,
-                    customerEmail: preorder.customerEmail,
-                    preorderId: preorder.preorderId,
-                    amount: preorder.amount,
-                    paymentLink,
+                    firestoreId: preorder.id,
+                    status: "payment_link_sent",
                 }),
             });
 
-            if (emailRes.ok) {
-                /* Update status */
-                await fetch("/api/admin/preorders/update-status", {
+            // 3. Try sending our branded email (best-effort, non-blocking)
+            let emailSent = false;
+            try {
+                const emailRes = await fetch("/api/admin/emails/send", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        firestoreId: preorder.id,
-                        status: "payment_link_sent",
+                        type: "payment_link",
+                        customerName: preorder.customerName,
+                        customerEmail: preorder.customerEmail,
+                        preorderId: preorder.preorderId,
+                        amount: preorder.amount,
+                        paymentLink,
                     }),
                 });
-                await fetchPreorders();
-                alert("Payment link generated and sent!");
-            } else {
-                alert("Failed to send email");
+                emailSent = emailRes.ok;
+            } catch {
+                /* Email is best-effort; Razorpay already notified the customer */
             }
+
+            await fetchPreorders();
+            alert(
+                emailSent
+                    ? "Payment link generated & email sent!"
+                    : "Payment link generated & sent via Razorpay! (Custom email skipped)"
+            );
         } catch (error) {
             console.error(error);
             alert("Network error");
