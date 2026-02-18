@@ -5,13 +5,25 @@ export async function GET() {
     try {
         const snap = await adminDb
             .collection("preorders")
-            .orderBy("createdAt", "desc")
             .get();
 
-        const preorders = snap.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
+        const preorders = snap.docs.map((doc) => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+                // Ensure createdAt is sortable
+                _sortTime: data.createdAt && typeof data.createdAt === 'object' && '_seconds' in data.createdAt
+                    ? data.createdAt._seconds * 1000
+                    : new Date(data.createdAt || 0).getTime()
+            };
+        });
+
+        // Sort in memory: newest first
+        preorders.sort((a, b) => b._sortTime - a._sortTime);
+
+        // Remove the helper field before returning
+        preorders.forEach((p) => delete (p as any)._sortTime);
 
         return NextResponse.json({ preorders });
     } catch (error) {
