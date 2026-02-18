@@ -1,0 +1,303 @@
+/* Customers Page — CSS Module */
+
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pageHeader {
+    margin-bottom: var(--space-3);
+}
+
+.pageTitle {
+    font-family: var(--font-editorial);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--admin-gold);
+    letter-spacing: 0.04em;
+    margin: 0;
+}
+
+.pageSubtitle {
+    font-size: 13px;
+    color: var(--admin-text-muted);
+    margin: 4px 0 0;
+}
+
+.filters {
+    margin-bottom: var(--space-3);
+}
+
+.searchInput {
+    width: 100%;
+    max-width: 360px;
+    padding: 10px var(--space-2);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    font-size: 13px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.searchInput:focus {
+    border-color: var(--admin-gold);
+}
+
+/* ── Table ── */
+.tableWrap {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background: var(--admin-bg-subtle);
+}
+
+.table th {
+    padding: 12px var(--space-2);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--admin-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.row {
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.row:hover {
+    background: var(--admin-surface-hover);
+}
+
+.rowExpanded {
+    background: var(--admin-gold-bg) !important;
+}
+
+.table td {
+    padding: 12px var(--space-2);
+    font-size: 13px;
+    border-bottom: 1px solid var(--admin-border);
+    vertical-align: middle;
+}
+
+.customerCell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--admin-border);
+}
+
+.avatarPlaceholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--admin-gold-bg);
+    color: var(--admin-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.customerName {
+    font-weight: 500;
+    color: var(--admin-text);
+}
+
+.emailCell {
+    color: var(--admin-text-secondary);
+}
+
+.ordersCell {
+    font-weight: 600;
+    color: var(--admin-text);
+}
+
+.spendCell {
+    font-family: var(--font-editorial);
+    font-weight: 600;
+    color: var(--admin-gold);
+}
+
+.dateCell {
+    color: var(--admin-text-muted);
+    font-size: 12px;
+}
+
+.expandBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--admin-text-muted);
+    padding: 4px 8px;
+}
+
+/* ── Detail ── */
+.detailRow td {
+    background: var(--admin-bg-subtle);
+    padding: 0 !important;
+}
+
+.detailContent {
+    padding: var(--space-3);
+}
+
+.detailHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
+}
+
+.detailHeader h3 {
+    font-family: var(--font-editorial);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--admin-gold);
+    margin: 0;
+}
+
+.detailHeader p {
+    font-size: 12px;
+    color: var(--admin-text-muted);
+    margin: 0;
+}
+
+.noOrders {
+    font-size: 13px;
+    color: var(--admin-text-muted);
+    text-align: center;
+    padding: var(--space-2);
+}
+
+.orderList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.orderCard {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    padding: 12px var(--space-2);
+}
+
+.orderMeta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.orderId {
+    font-size: 11px;
+    color: var(--admin-text-muted);
+    font-family: monospace;
+}
+
+.orderDate {
+    font-size: 11px;
+    color: var(--admin-text-muted);
+}
+
+.orderInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.orderInfo span:first-child {
+    font-weight: 600;
+    color: var(--admin-text);
+}
+
+.orderStatus {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.orderItems {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.orderItems span {
+    font-size: 11px;
+    color: var(--admin-text-muted);
+    background: var(--admin-bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* ── Loading / Empty ── */
+.loadingWrap,
+.emptyWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 16px;
+    color: var(--admin-text-muted);
+    font-size: 14px;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--admin-border);
+    border-top-color: var(--admin-gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .table th:nth-child(5),
+    .table td:nth-child(5) {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spinner {
+        animation: none;
+    }
+
+    .row,
+    .searchInput {
+        transition: none;
+    }
+}

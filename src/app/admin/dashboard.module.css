@@ -1,0 +1,310 @@
+/* Dashboard Home — CSS Module */
+
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ── Page Header ── */
+.pageHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+}
+
+.pageTitle {
+    font-family: var(--font-editorial);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--admin-gold);
+    letter-spacing: 0.04em;
+    margin: 0;
+}
+
+.pageSubtitle {
+    font-size: 13px;
+    color: var(--admin-text-muted);
+    margin: 4px 0 0;
+}
+
+.refreshBtn {
+    padding: 8px 16px;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    background: transparent;
+    color: var(--admin-gold);
+    font-size: 13px;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.refreshBtn:hover {
+    background: var(--admin-gold-bg);
+}
+
+.refreshBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Stats Grid ── */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+}
+
+.statCard {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: var(--space-3);
+    transition: border-color var(--transition-fast);
+}
+
+.statCard:hover {
+    border-color: var(--admin-border-hover);
+}
+
+.statIcon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--admin-gold-bg);
+    border-radius: var(--admin-radius-sm);
+    flex-shrink: 0;
+}
+
+.statInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.statValue {
+    font-family: var(--font-editorial);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--admin-text);
+}
+
+.statLabel {
+    font-size: 12px;
+    color: var(--admin-text-muted);
+    margin-top: 2px;
+}
+
+/* ── Section Titles ── */
+.sectionTitle {
+    font-family: var(--font-editorial);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--admin-gold);
+    margin: 0 0 var(--space-2);
+    letter-spacing: 0.03em;
+}
+
+/* ── Chart ── */
+.chartSection {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.chartContainer {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 200px;
+    padding-top: var(--space-2);
+    overflow-x: auto;
+}
+
+.chartBar {
+    flex: 1;
+    min-width: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: relative;
+}
+
+.chartBarFill {
+    width: 100%;
+    max-width: 32px;
+    background: linear-gradient(180deg, var(--admin-gold), var(--admin-gold-muted));
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height var(--transition-base);
+}
+
+.chartBarLabel {
+    font-size: 9px;
+    color: var(--admin-text-muted);
+    margin-top: 6px;
+    white-space: nowrap;
+}
+
+.chartBarTooltip {
+    position: absolute;
+    top: -4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--admin-gold);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.chartBar:hover .chartBarTooltip {
+    opacity: 1;
+}
+
+/* ── Activity ── */
+.activitySection {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: var(--space-3);
+}
+
+.activityList {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.activityItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 12px var(--space-2);
+    border-radius: var(--admin-radius-sm);
+    transition: background var(--transition-fast);
+}
+
+.activityItem:hover {
+    background: var(--admin-surface-hover);
+}
+
+.activityIcon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.activityInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.activityName {
+    font-weight: 500;
+    color: var(--admin-text);
+    font-size: 13px;
+}
+
+.activityMeta {
+    font-size: 11px;
+    color: var(--admin-text-muted);
+    margin-top: 2px;
+}
+
+.activityStatus {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid;
+    white-space: nowrap;
+    text-transform: capitalize;
+}
+
+.emptyText {
+    color: var(--admin-text-muted);
+    font-size: 13px;
+    text-align: center;
+    padding: var(--space-4);
+}
+
+/* ── Loading ── */
+.loadingWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 16px;
+    color: var(--admin-text-muted);
+    font-size: 14px;
+    min-height: 60vh;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--admin-border);
+    border-top-color: var(--admin-gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .pageHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chartContainer {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    .spinner {
+        animation: none;
+    }
+
+    .chartBarFill,
+    .activityItem,
+    .statCard,
+    .refreshBtn {
+        transition: none;
+    }
+
+    .chartBarTooltip {
+        transition: none;
+    }
+}

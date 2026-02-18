@@ -1,0 +1,306 @@
+/* ═══════════════════════════════════════════════
+   Admin Layout — CSS Module
+   Sareine Gold Glassmorphism Dark Theme
+   ═══════════════════════════════════════════════ */
+
+/* ── Login Page ── */
+.loginPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--admin-bg);
+    padding: var(--space-2);
+}
+
+.loginCard {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: var(--space-6) var(--space-4);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+}
+
+.loginTitle {
+    margin: 0 0 var(--space-1);
+    font-family: var(--font-editorial);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--admin-gold);
+    letter-spacing: 0.06em;
+}
+
+.loginSubtitle {
+    margin: 0 0 var(--space-3);
+    font-size: 13px;
+    color: var(--admin-text-muted);
+}
+
+.loginInput {
+    width: 100%;
+    padding: 12px var(--space-2);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    background: var(--admin-bg);
+    color: var(--admin-text);
+    font-size: 14px;
+    font-family: var(--font-body);
+    margin-bottom: var(--space-2);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.loginInput:focus {
+    border-color: var(--admin-gold);
+}
+
+.loginBtn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--admin-radius-sm);
+    background: linear-gradient(135deg, #c9a45c, #d4b46a, #baa05c);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: opacity var(--transition-fast);
+}
+
+.loginBtn:hover {
+    opacity: 0.9;
+}
+
+/* ── Layout Shell ── */
+.layoutShell {
+    display: flex;
+    min-height: 100vh;
+    background: var(--admin-bg);
+}
+
+/* ── Sidebar ── */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--admin-surface);
+    border-right: 1px solid var(--admin-border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    transition: transform var(--transition-base);
+    overflow-y: auto;
+}
+
+.sidebarHeader {
+    padding: var(--space-3) var(--space-3);
+    border-bottom: 1px solid var(--admin-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebarBrand {
+    font-family: var(--font-editorial);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--admin-gold);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+}
+
+.sidebarBrandSub {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--admin-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: block;
+    margin-top: 2px;
+}
+
+.sidebarNav {
+    flex: 1;
+    padding: var(--space-2) var(--space-1);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.navSection {
+    margin-bottom: var(--space-2);
+}
+
+.navSectionLabel {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--admin-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: var(--space-1) var(--space-2);
+    margin-bottom: 4px;
+}
+
+.navLink {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 10px var(--space-2);
+    border-radius: var(--admin-radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--admin-text-secondary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.navLink:hover {
+    color: var(--admin-text);
+    background: var(--admin-gold-bg);
+}
+
+.navLinkActive {
+    color: var(--admin-gold) !important;
+    background: var(--admin-gold-bg) !important;
+}
+
+.navIcon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.navLinkActive .navIcon {
+    opacity: 1;
+}
+
+.sidebarFooter {
+    padding: var(--space-2) var(--space-3);
+    border-top: 1px solid var(--admin-border);
+}
+
+.logoutBtn {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    background: transparent;
+    color: var(--admin-text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.logoutBtn:hover {
+    color: var(--status-danger);
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.06);
+}
+
+/* ── Main Content ── */
+.mainContent {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    padding: var(--space-4);
+    overflow-x: hidden;
+}
+
+/* ── Mobile Hamburger ── */
+.hamburger {
+    display: none;
+    position: fixed;
+    top: var(--space-2);
+    left: var(--space-2);
+    z-index: 200;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    background: var(--admin-surface);
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: background var(--transition-fast);
+}
+
+.hamburger:hover {
+    background: var(--admin-surface-hover);
+}
+
+.hamburgerLine {
+    width: 18px;
+    height: 2px;
+    background: var(--admin-gold);
+    border-radius: 1px;
+    transition: all var(--transition-fast);
+}
+
+.hamburgerOpen .hamburgerLine:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburgerOpen .hamburgerLine:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburgerOpen .hamburgerLine:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 90;
+}
+
+.overlayVisible {
+    display: block;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebarOpen {
+        transform: translateX(0);
+    }
+
+    .mainContent {
+        margin-left: 0;
+        padding: 72px var(--space-2) var(--space-4);
+    }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+
+    .sidebar,
+    .navLink,
+    .hamburgerLine,
+    .loginInput,
+    .loginBtn,
+    .logoutBtn {
+        transition: none;
+    }
+}

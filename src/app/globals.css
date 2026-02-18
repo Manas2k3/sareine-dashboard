@@ -1,0 +1,144 @@
+/* ============================================
+   SAREINE ADMIN DASHBOARD — DESIGN SYSTEM
+   Dark theme with Gold Glassmorphism
+   ============================================ */
+
+:root {
+  /* ── Dark Admin Palette ── */
+  --admin-bg: #0f0f10;
+  --admin-bg-subtle: #141416;
+  --admin-surface: #1a1a1e;
+  --admin-surface-hover: #222226;
+  --admin-surface-active: #2a2a2e;
+  --admin-border: rgba(201, 164, 92, 0.12);
+  --admin-border-hover: rgba(201, 164, 92, 0.24);
+
+  /* ── Gold Accent Palette ── */
+  --admin-gold: #c9a45c;
+  --admin-gold-light: #d4b46a;
+  --admin-gold-muted: #a88d47;
+  --admin-gold-bg: rgba(201, 164, 92, 0.08);
+  --admin-gold-bg-hover: rgba(201, 164, 92, 0.14);
+
+  /* ── Text ── */
+  --admin-text: #e8e4dd;
+  --admin-text-secondary: #b5b0a7;
+  --admin-text-muted: #8a847a;
+
+  /* ── Status Colors ── */
+  --status-success: #22c55e;
+  --status-warning: #e6a817;
+  --status-info: #3b82f6;
+  --status-danger: #ef4444;
+  --status-purple: #8b5cf6;
+
+  /* ── Layout ── */
+  --admin-radius: 12px;
+  --admin-radius-sm: 8px;
+  --admin-radius-lg: 16px;
+  --sidebar-width: 260px;
+  --header-height: 64px;
+
+  /* ── Spacing (8px grid) ── */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+
+  /* ── Typography ── */
+  --font-editorial: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* ── Motion ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-slow: 400ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-gold: 0 4px 20px rgba(201, 164, 92, 0.15);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--admin-bg);
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--admin-text);
+  background: var(--admin-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  color: var(--admin-text);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--admin-gold);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--admin-gold-light);
+}
+
+/* ── Focus ── */
+:focus-visible {
+  outline: 2px solid var(--admin-gold);
+  outline-offset: 2px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--admin-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--admin-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--admin-gold-muted);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
