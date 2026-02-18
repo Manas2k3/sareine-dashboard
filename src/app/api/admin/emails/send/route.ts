@@ -3,6 +3,7 @@ import { adminDb } from "@/lib/firebase/admin";
 import {
     sendOrderConfirmationEmail,
     sendPreorderConfirmationEmail,
+    sendPaymentLinkEmail,
     sendDispatchConfirmationEmail,
     sendDeliveryConfirmationEmail,
     sendPromotionalEmail,
@@ -48,6 +49,18 @@ export async function POST(req: NextRequest) {
                     items: data.items || [],
                     amount: data.amount,
                     shippingAddress: data.shippingAddress,
+                });
+                break;
+            }
+
+            case "payment_link": {
+                const { customerName, customerEmail, preorderId, amount, paymentLink } = body;
+                result = await sendPaymentLinkEmail({
+                    customerName,
+                    customerEmail,
+                    preorderId,
+                    amount,
+                    paymentLink,
                 });
                 break;
             }
